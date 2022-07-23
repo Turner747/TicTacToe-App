@@ -12,6 +12,7 @@ namespace TicTacToe_App
         };
 
         static bool isAWinner = false;
+        static bool playAgain = false;
 
         // player 1 = x
         // player 2 = o
@@ -23,26 +24,48 @@ namespace TicTacToe_App
             int iterator = 0;
             int currentPlayer = 0;
 
-            while (!isAWinner)
+            do
             {
-                if (iterator % 2 == 0)
-                    currentPlayer = 1;
+                while (!isAWinner)
+                {
+                    if (iterator % 2 == 0)
+                        currentPlayer = 1;
+                    else
+                        currentPlayer = 2;
+
+                    Console.Write("\nPlayer {0}, select a position: ", currentPlayer);
+                    int position = Int32.Parse(Console.ReadLine());
+
+                    UpdateBoard(position, currentPlayer);
+
+                    DisplayBoard();
+
+                    iterator++;
+
+                    isAWinner = CheckForAWinner(currentPlayer);
+                }
+
+                Console.WriteLine("\nCongratulations Player {0} is the winner!", currentPlayer);
+
+                Console.Write("\nDo you want to play again? (y/n): ");
+                string input = Console.ReadLine();
+
+                if (input.Equals("y"))
+                {
+                    ResetBoard();
+                    isAWinner = false;
+                    iterator = 0;
+                    DisplayBoard();
+                    playAgain = true;
+                }
                 else
-                    currentPlayer = 2;
-
-                Console.Write("\nPlayer {0}, select a position: ", currentPlayer);
-                int position = Int32.Parse(Console.ReadLine());
-
-                UpdateBoard(position, currentPlayer);
-
-                DisplayBoard();
-
-                iterator++;
-
-                isAWinner = CheckForAWinner(currentPlayer);
+                {
+                    playAgain = false;
+                }
             }
+            while (playAgain);
 
-            Console.WriteLine("Congratulations Player {0} is the winner!", currentPlayer);
+
         }
 
         static void DisplayBoard()
@@ -158,6 +181,19 @@ namespace TicTacToe_App
             }
 
             return false;
+        }
+
+        static void ResetBoard()
+        {
+            board[0, 0] = '1';
+            board[0, 1] = '2';
+            board[0, 2] = '3';
+            board[1, 0] = '4';
+            board[1, 1] = '5';
+            board[1, 2] = '6';
+            board[2, 0] = '7';
+            board[2, 1] = '8';
+            board[2, 2] = '9';
         }
     }
 }
