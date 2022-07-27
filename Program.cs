@@ -14,6 +14,9 @@ namespace TicTacToe_App
         static bool isAWinner = false;
         static bool playAgain = false;
 
+        const char PlayerOneChar = 'X';
+        const char PlayerTwoChar = 'O';
+
         // player 1 = x
         // player 2 = o
 
@@ -28,6 +31,7 @@ namespace TicTacToe_App
             {
                 while (!isAWinner)
                 {
+                    // determine the current player
                     if (iterator % 2 == 0)
                         currentPlayer = 1;
                     else
@@ -39,10 +43,10 @@ namespace TicTacToe_App
                     UpdateBoard(position, currentPlayer);
 
                     DisplayBoard();
+                    
+                    isAWinner = CheckForAWinner(currentPlayer);
 
                     iterator++;
-
-                    isAWinner = CheckForAWinner(currentPlayer);
                 }
 
                 Console.WriteLine("\nCongratulations Player {0} is the winner!", currentPlayer);
@@ -93,13 +97,15 @@ namespace TicTacToe_App
         {
             char playerMove;
 
+            // determine the character to use
             if (player == 1)
-                playerMove = 'X';
+                playerMove = PlayerOneChar;
             else if (player == 2)
-                playerMove = 'O';
+                playerMove = PlayerTwoChar;
             else
                 throw new Exception("Invalid player");
 
+            // update the board
             switch (position)
             {
                 case 1:
@@ -137,50 +143,53 @@ namespace TicTacToe_App
 
         static bool CheckForAWinner(int player)
         {
+            char checkChar = ' ';
+
+            // determine the char to check for
             if (player == 1)
             {
-                if (board[0, 0] == 'X' && board[0, 1] == 'X' && board[0, 2] == 'X')
-                    return true;
-                else if (board[1, 0] == 'X' && board[1, 1] == 'X' && board[1, 2] == 'X')
-                    return true;
-                else if (board[2, 0] == 'X' && board[2, 1] == 'X' && board[2, 2] == 'X')
-                    return true;
-                else if (board[0, 0] == 'X' && board[1, 0] == 'X' && board[2, 0] == 'X')
-                    return true;
-                else if (board[0, 1] == 'X' && board[1, 1] == 'X' && board[2, 1] == 'X')
-                    return true;
-                else if (board[0, 2] == 'X' && board[1, 2] == 'X' && board[2, 2] == 'X')
-                    return true;
-                else if (board[0, 0] == 'X' && board[1, 1] == 'X' && board[2, 2] == 'X')
-                    return true;
-                else if (board[0, 2] == 'X' && board[1, 1] == 'X' && board[2, 0] == 'X')
-                    return true;
-                else
-                    return false;
+                checkChar = PlayerOneChar;
             }
             else if (player == 2)
             {
-                if (board[0, 0] == 'O' && board[0, 1] == 'O' && board[0, 2] == 'O')
-                    return true;
-                else if (board[1, 0] == 'O' && board[1, 1] == 'O' && board[1, 2] == 'O')
-                    return true;
-                else if (board[2, 0] == 'O' && board[2, 1] == 'O' && board[2, 2] == 'O')
-                    return true;
-                else if (board[0, 0] == 'O' && board[1, 0] == 'O' && board[2, 0] == 'O')
-                    return true;
-                else if (board[0, 1] == 'O' && board[1, 1] == 'O' && board[2, 1] == 'O')
-                    return true;
-                else if (board[0, 2] == 'O' && board[1, 2] == 'O' && board[2, 2] == 'O')
-                    return true;
-                else if (board[0, 0] == 'O' && board[1, 1] == 'O' && board[2, 2] == 'O')
-                    return true;
-                else if (board[0, 2] == 'O' && board[1, 1] == 'O' && board[2, 0] == 'O')
-                    return true;
-                else
-                    return false;
+                checkChar = PlayerTwoChar;
+            }
+            else
+            {
+                throw new Exception("Invalid player");
             }
 
-            return false;
+            // horizontal rows for a winner
+            for (int i = 0; i < 3; i++)
+            {
+                if (board[i, 0] == checkChar && board[i, 1] == checkChar && board[i, 2] == checkChar)
+                {
+                    return true;
+                }
+            }
+
+            // check vertical columns for a winner
+            for (int i = 0; i < 3; i++)
+            {
+                if (board[0, i] == checkChar && board[1, i] == checkChar && board[2, i] == checkChar)
+                {
+                    return true;
+                }
+            }
+
+            // check top left to bottom right diagonal for a winner
+            if (board[0, 0] == checkChar && board[1, 1] == checkChar && board[2, 2] == checkChar)
+            {
+                return true;
+            }// check top right to bottom left diagonal for a winner
+            else if (board[2, 0] == checkChar && board[1, 1] == checkChar && board[0, 2] == checkChar)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         static void ResetBoard()
